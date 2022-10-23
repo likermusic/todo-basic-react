@@ -19,18 +19,20 @@ const App = () => {
   
   let [listData, setListData] = useState(initialData);
   let [term, setTerm] = useState('');
+  let [filter, setFilter] = useState('all'); // filter = 'all'`
+
   // let [done, setDone] = useState(inintialDone);
   //Способ 2
   /*
   let [isFilter, setFilter] = useState(false);
   let [filteredData, setFilteredData] = useState([]);
   */
-  let visibleItems = listData.filter(item => item.title.toLowerCase().includes(term.toLowerCase()));
-
-  let done = listData.reduce((count, item) => {
-    return count + item.done;
+ 
+ 
+ let done = listData.reduce((count, item) => {
+   return count + item.done;
   }, 0);
-
+  
   const importantHandler = (id) => {
     const ind = listData.findIndex((elem) => elem.id == id);
     // let newData = [];
@@ -106,12 +108,32 @@ const App = () => {
     */
   // }
 
+  const chooseFilter = (listData,term,filter) => {
+    //all - 3 
+    //active = all -done
+    //done = done
+
+    let searchListData = listData.filter(item =>item.title.toLowerCase().includes(term.toLowerCase()));
+
+    switch (filter) {
+      case "all": 
+      return searchListData.filter(item=>item);
+      case "active": 
+      return searchListData.filter(item=>!item.done);
+      case "done": 
+      return searchListData.filter(item=>item.done);
+    }
+  }
+
+ let visibleItems = chooseFilter(listData,term,filter);
+
+
   return (
     <div className='todo-app'>
       <AppHeader todo={listData.length-done} done={done}/>
       <div className='top-panel d-flex'>
         <SearchPanel onSearch={(term)=>setTerm(term)}/>
-        <ItemStatusFilter />
+        <ItemStatusFilter filter={filter} onFilter={(filter)=>setFilter(filter)}/>
       </div>
       <List
         onDone={(id) => doneHandler(id)}

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./AppHeader.module.css";
 
 const AppHeader = ( {todo, done} ) => {
-  console.log(styles.AppHeader);
+  // console.log(styles.AppHeader);
   return (
     // <div className={'' +' '+'d-flex'}>
     <div className={styles.AppHeader + ' d-flex'}>
