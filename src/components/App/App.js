@@ -8,12 +8,28 @@ import ItemAddForm from "../ItemAddForm/ItemAddForm";
 import "./App.css";
 
 const App = () => {
+
   let initialData = [
     { title: "Task1", important: false, done: false, id: "1" },
-    { title: "Task2", important: true, done: true, id: "2" },
+    { title: "Task2", important: true, done: false, id: "2" },
     { title: "Task3", important: false, done: false, id: "3" },
   ];
+
+  
+  
   let [listData, setListData] = useState(initialData);
+  let [term, setTerm] = useState('');
+  // let [done, setDone] = useState(inintialDone);
+  //Способ 2
+  /*
+  let [isFilter, setFilter] = useState(false);
+  let [filteredData, setFilteredData] = useState([]);
+  */
+  let visibleItems = listData.filter(item => item.title.toLowerCase().includes(term.toLowerCase()));
+
+  let done = listData.reduce((count, item) => {
+    return count + item.done;
+  }, 0);
 
   const importantHandler = (id) => {
     const ind = listData.findIndex((elem) => elem.id == id);
@@ -43,27 +59,69 @@ const App = () => {
     // console.log(a, b);
   };
   const doneHandler = (id) => {
+    // alert(id);
     const ind = listData.findIndex((elem) => elem.id == id);
     let newData = [...listData];
     newData[ind].done = !newData[ind].done;
     setListData(newData);
   };
-  const addTextHandler = (text) => {
-    // setText(text);
+
+  const deleteTaskHandler = (id) => {
+    const ind = listData.findIndex((elem) => elem.id == id);
+    let newData = [...listData];
+    newData.splice(ind,1);
+    setListData(newData);
   };
+
+  const addTaskHandler = (text) => {
+    // setText(text);
+    // { title: "Task1", important: false, done: false, id: "1" }
+    let task = {
+      title: text,
+      important: false,
+      done: false,
+      id: listData.length + 1
+    }
+    // listData.push(task);
+    let newListData = [].concat(listData);
+    newListData.push(task);
+    setListData(newListData);
+  };
+
+ 
+
+  // const searchHandler = (term) => {
+    //Способ 1
+    // visibleItems = listData.filter(item => item.title.toLowerCase().includes(term.toLowerCase()));
+    // setTerm(term);
+    //Способ 2
+    /*
+    if (term) {
+      setFilter(true);
+      let filteredData = listData.filter(item => item.title.toLowerCase().includes(term.toLowerCase()));
+      setFilteredData(filteredData);
+    } else {
+      setFilter(false);
+    }
+    */
+  // }
+
   return (
     <div className='todo-app'>
-      <AppHeader />
+      <AppHeader todo={listData.length-done} done={done}/>
       <div className='top-panel d-flex'>
-        <SearchPanel />
+        <SearchPanel onSearch={(term)=>setTerm(term)}/>
         <ItemStatusFilter />
       </div>
       <List
         onDone={(id) => doneHandler(id)}
-        listData={listData}
+        // listData={isFilter ? filteredData : listData}
+        listData={visibleItems}
+        // listData={listData}
         onImportant={(id) => importantHandler(id)}
+        onDelete={(id) => deleteTaskHandler(id)}
       />
-      <ItemAddForm onAddText={(text) => addTextHandler(text)} />
+      <ItemAddForm onAddTask={(text) => addTaskHandler(text)} />
     </div>
   );
 };
