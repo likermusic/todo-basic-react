@@ -6,6 +6,19 @@ import ItemStatusFilter from "../ItemStatusFilter/ItemStatusFilter";
 import List from "../List/List";
 import ItemAddForm from "../ItemAddForm/ItemAddForm";
 import "./App.css";
+import ListItem1 from '../ListItem1/ListItem1';
+
+// const App = () => {
+//   alert('App')
+
+//   return (
+//     <div>
+//       <ListItem1/>
+//     </div>
+//   )
+// }
+
+
 
 const App = () => {
 
